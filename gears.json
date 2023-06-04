@@ -1,0 +1,20 @@
+//distance: 29064.9 meter (18.06 miles) more then equasion
+
+[
+  {
+    "id": 1,
+    "brand":"Shimano",
+    "mobal": "M5100 Deore",
+    "speed": "11",
+    "teeth": "11-42t",
+    "limit": '2900'
+  },
+  {
+    "id": 2,
+    "brand":"Sram",
+    "mobal": "PG1130 MTB",
+    "speed": "11",
+    "teeth": "11-42t",
+    "limit": '2600'
+  }
+]

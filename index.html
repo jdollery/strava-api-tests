@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <h4>Athlete JSON</h4>
+  <div id="athleteOutput"></div>
+
+  <h4>Activites JSON</h4>
+  <div id="activitesOutput"></div>
+
+  <!-- <h2>Name: <span id="athleteDetails"></span></h2> -->
+
+  <script>
+
+    // https://github.com/franchyze923/Code_From_Tutorials/tree/master/Strava_Api
+    // https://github.com/franchyze923/Code_From_Tutorials/blob/master/Strava_Api/strava_leaflet/script.js
+    // https://www.markhneedham.com/blog/2020/12/15/strava-authorization-error-missing-read-permission/
+    
+    let auth_link = "https://www.strava.com/oauth/token"
+    // above link used for getting token and refreshing token
+
+
+    /*-----------------------------------------------------------------------------------*/
+    /* ATHLETE API CALL & REFRESH */
+    /*-----------------------------------------------------------------------------------*/
+
+    let athleteOutput = document.getElementById("athleteOutput");
+    // let athleteDetails = document.getElementById("athleteDetails");
+
+    let activitesOutput = document.getElementById("activitesOutput");
+
+
+    function getAthlete(res){
+      const athlete_link = `https://www.strava.com/api/v3/athlete?access_token=${res.access_token}`
+      fetch(athlete_link)
+
+      // .then((res) => console.log(res.json()))
+
+      .then((res) => res.text())
+      
+      .then((json) => {
+        populateAthlete(json)
+      })
+
+      .catch(err => console.warn('Something went wrong.', err))
+
+    }
+
+    
+    function populateAthlete(json) {
+      athleteOutput.innerHTML = json;
+      // athleteDetails.innerHTML = JSON.parse(json).firstname;
+    }
+
+
+    function reAuthorizeAthlete(){
+      fetch(auth_link,{
+
+        method: 'post',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          client_id: '108258',
+          client_secret: '0cf7101e1609a01dc02331c63a40f2cee424f680',
+          refresh_token: 'e6e48ee4e9e8e45e35c19c3835708d09f43f4e53',
+          grant_type: 'refresh_token', 
+        })
+
+      })
+      
+      .then(res => res.json())
+      .then(res => getAthlete(res))  
+
+    }
+
+    reAuthorizeAthlete()
+
+
+    /*-----------------------------------------------------------------------------------*/
+    /* ATHLETE ACTIVITES API CALL & REFRESH */
+    /*-----------------------------------------------------------------------------------*/
+
+    function getActivites(code) {
+      const activites_link = `https://www.strava.com/api/v3/athlete/activities?access_token=${code.access_token}` //Comment out once got auth_user manual autho - use for athlete
+      
+      console.log(code)
+      
+      fetch(activites_link)
+
+      .then((res) => res.json())
+      
+      .then(function (data) {
+        console.log(data)
+        populateActivites(data)
+      })
+
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    }
+
+
+    function populateActivites(json) { 
+      activitesOutput.innerHTML = Object.entries(json).map(([k,v])=>[+k,v]);
+    }
+
+
+    function reAuthorizeActivites(){
+      fetch(auth_link,{
+
+        method: 'post',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          client_id: '108258',
+          client_secret: '0cf7101e1609a01dc02331c63a40f2cee424f680',
+          refresh_token: 'bb317d8e72106052ffe6ccc7af5fd1c10fab5580', //Get from json after auth_user manual autho
+
+          //TURN OFF AFTER MANUAL USER AUTHORISATION
+
+          // const auth_user = 'https://www.strava.com/oauth/authorize?client_id=108258&response_type=code&redirect_uri=http://127.0.0.1:5500/exchange_token&approval_prompt=force&scope=activity:read_all';
+          // the above link is how end user authroizes. This will be done once manually then we will use token/refresh token
+
+          // code: '2d78b27af42ca3c7a1b579346d53c49fef041f37', //Get 'code' from URL after manual auth_user e.g http://127.0.0.1:5500/exchange_token?state=&code=f7c4a6d8fdf5f31c19d76e1a35adadba9e8ae76e&scope=read,activity:read_all
+          // grant_type: 'authorization_code',
+          
+
+          //TURN ON AFTER MANUAL USER AUTHORISATION REFRESH
+
+          code: '2d78b27af42ca3c7a1b579346d53c49fef041f37', //Get 'access_token' from JSON after auth_user manual
+          grant_type: 'refresh_token', 
+
+        })
+
+      })
+      
+      .then(res => res.json())
+      .then(res => getActivites(res))  
+
+    }
+
+    reAuthorizeActivites()
+
+  </script>
+
+  
+</body>
+</html>
