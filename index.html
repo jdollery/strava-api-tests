@@ -88,9 +88,9 @@
         },
 
         body: JSON.stringify({
-          client_id: '108258',
-          client_secret: '0cf7101e1609a01dc02331c63a40f2cee424f680',
-          refresh_token: 'e6e48ee4e9e8e45e35c19c3835708d09f43f4e53',
+          client_id: id,
+          client_secret: secret,
+          refresh_token: token,
           grant_type: 'refresh_token', 
         })
 
@@ -159,6 +159,9 @@
         }
         document.getElementById("table").innerHTML = table;
       }
+
+
+      
       
     }
 
@@ -173,9 +176,9 @@
         },
 
         body: JSON.stringify({
-          client_id: '108258',
-          client_secret: '0cf7101e1609a01dc02331c63a40f2cee424f680',
-          refresh_token: 'bb317d8e72106052ffe6ccc7af5fd1c10fab5580', //Get from json after auth_user manual autho
+          client_id: id,
+          client_secret: secret,
+          refresh_token: token, //Get from json after auth_user manual autho
 
           //TURN OFF AFTER MANUAL USER AUTHORISATION
 
